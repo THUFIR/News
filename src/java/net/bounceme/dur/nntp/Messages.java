@@ -8,19 +8,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.ManagedBean;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.mail.Header;
 
-@ManagedBean
-@SessionScoped
+@ManagedBean(value = "messages")
+@RequestScoped
 public class Messages implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(Messages.class.getName());
     private static Level level = Level.INFO;
     private SingletonNNTP nntp = SingletonNNTP.INSTANCE;
+    private String foo = "bar";
+    private DataModel model = null;
 
     public Messages() {
         logger.log(level, "MessageBean..");
@@ -30,15 +32,8 @@ public class Messages implements Serializable {
         logger.log(level, "action..");
     }
 
-    public DataModel getModel() throws Exception {
-        logger.log(level, "MessageBean.getModel..");
-        List<javax.mail.Message> messages = new ArrayList<javax.mail.Message>();
-        messages = nntp.getMessages();
-        DataModel messagesDataModel = new ListDataModel(messages);
-        return messagesDataModel;
-    }
-
     public URL getUrl(javax.mail.Message message) throws Exception {
+        logger.log(level, "MessageBean.getUrl..");
         List<Header> headers = getHeaders(message);
         URL url = new URL("http://www.google.com/");
         for (Header h : headers) {
@@ -52,6 +47,7 @@ public class Messages implements Serializable {
     }
 
     private List<Header> getHeaders(javax.mail.Message message) throws Exception {
+        logger.log(level, "MessageBean.getHeaders..");
         Enumeration allHeaders = message.getAllHeaders();
         List<Header> headers = new ArrayList<Header>();
         while (allHeaders.hasMoreElements()) {
@@ -74,5 +70,25 @@ public class Messages implements Serializable {
     public String detail() throws Exception {
         logger.log(level, "MessageBean.detail..");
         return "detail.xhtml";
+    }
+
+    public String getFoo() {
+        return foo;
+    }
+
+    public void setFoo(String foo) {
+        this.foo = foo;
+    }
+
+    public DataModel getModel() throws Exception {
+        logger.log(level, "MessageBean.getModel..");
+        List<javax.mail.Message> messages = new ArrayList<javax.mail.Message>();
+        messages = nntp.getMessages();
+        DataModel messagesDataModel = new ListDataModel(messages);
+        return messagesDataModel;
+    }
+
+    public void setModel(DataModel model) {
+        this.model = model;
     }
 }

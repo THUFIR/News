@@ -22,7 +22,7 @@ public class PropertiesReader {
             Logger.getLogger(PropertiesReader.class.getName()).log(Level.SEVERE, null, ex);
         }
         //this.getClass().getResourceAsStream("/nntp.properties");
-        //logger.log(level, props.toString());
+        logger.log(level, props.toString());
         return props;
     }
 }
